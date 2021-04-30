@@ -1,0 +1,94 @@
+//Lucas de Sousa Massei - 834080
+//Pedro Vitor Siqueira da Silva - 834862
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct no //Nó
+{
+  int elemento;        //elemento(número) do nó
+  struct no *esquerda; //ponteiro para a subávore à esquerda
+  struct no *direita;  //ponteiro para a subávore à direita
+} No;
+
+No *inicializaArvore() //função para inicializar a árvore
+{
+  return NULL;
+}
+
+No *inserirArvore(No *raiz, int x) //função para inserir um valor na árvore
+{
+  if (raiz == NULL) //verifica se a árvore está vazia
+  {
+    No *aux = (No *)malloc(sizeof(No)); //alocando um novo nó
+    aux->elemento = x;                  //novo nó recebe o numero passado por parâmetro
+    aux->esquerda = NULL;               //como é o primeiro elemento, tanto esquerda quanto direita recebem NULL
+    aux->direita = NULL;
+    return aux; //retorna o valor do novo nó
+  }
+  else
+  {
+    if (x > raiz->elemento) //se o número for maior então vai pra direita
+    {
+      raiz->direita = inserirArvore(raiz->direita, x); //percorre pela subárvore à direita
+    }
+    else if (x < raiz->elemento) //se o número for menor então vai pra esquerda
+    {
+      raiz->esquerda = inserirArvore(raiz->esquerda, x); //percorre pela subárvore à esquerda
+    }
+  }
+  return raiz; //retorna a raiz
+}
+
+void imprimeArvore(No *raiz) //função que imprime a árvore
+{
+  if (raiz != NULL) //verifica se a árvore não está vazia, se não estiver...
+  {
+    //mostra os elementos em pré-ordem
+    printf("%d\n", raiz->elemento); //printa a raiz
+    imprimeArvore(raiz->esquerda);  //printa a subárvore à esquerda
+    imprimeArvore(raiz->direita);   //printa a subárvore à direita
+  }
+}
+
+int main() //inicia o programa principal
+{
+  //declaração de variáveis
+  int opcao;
+  int numero;
+  No *raiz = inicializaArvore(); //inicia a árvore
+
+  //criação do menu
+  do
+  {
+    printf("\n1 - Insere elemento na arvore\n");
+    printf("2 - Imprime elementos\n");
+    printf("9 - Fim\n");
+    printf("\nOpcao:");
+    scanf("%i", &opcao);
+    system("cls");
+    {
+      switch (opcao) //chamada das funções em cada case
+      {
+      case 1:
+        printf("Digite o numero: ");
+        scanf("%i", &numero);               //número que será inserido na árvore
+        fflush(stdin);                      // limpa o buffer
+        raiz = inserirArvore(raiz, numero); //chamada da funçaõ de inserir o número digitado na árvore, sendo que a raiz recebe a função
+        break;
+      case 2:
+        imprimeArvore(raiz); //imprime a árvore, passando como parâmetro a raiz que recebeu os números
+        break;
+      case 9:
+        printf("\nSaindo....\n"); //finaliza o programa
+        break;
+      default:
+        printf("Opcao Invalida!!\n"); //se a opcao escrita for diferente 1, 2 e 9, então opcao inválida
+        break;
+      }
+    }
+  } while (opcao != 9); //se a opção escolhida for 9, então finaliza o while e portanto o programa
+
+  free(raiz); //libera a memória alocada pela estrutura árvore
+  return 0;
+}
